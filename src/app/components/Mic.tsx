@@ -78,8 +78,7 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
     };
   }, [isMicActive, startContinuousRecording, stopContinuousRecording]);
 
-  const handleMicMouseDown = () => setIsMicActive(true);
-  const handleMicMouseUp = () => setIsMicActive(false);
+  const handleMicClick = () => setIsMicActive(!isMicActive);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -105,8 +104,7 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
 
   return (
     <button
-      onMouseDown={handleMicMouseDown}
-      onMouseUp={handleMicMouseUp}
+      onClick={handleMicClick}
       className="text-5xl"
     >
       {isMicActive ? (
