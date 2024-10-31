@@ -2,8 +2,8 @@
 
 import { createContext, ReactNode, useContext, useState } from "react";
 
-import { Response_md5 } from "@/interface/Md5";
-import { User } from "@/interface/User";
+import { Response_md5 } from "../interface/Md5";
+import { User } from "../interface/User";
 
 interface UserContextType {
   user: User | null;

@@ -1,26 +1,17 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import { Server } from 'socket.io';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+let io: Server | null = null;
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log("Requisição recebida");
-  if (res.socket && !(res.socket as any).server.io) {
-    console.log("Iniciando servidor Socket.io");
-
-    const io = new Server((res.socket as any).server, {
-      path: "/socket", 
+const initSocket = (server: any) => {
+  if (!io) {
+    io = new Server(server, {
+      path: "/socket",
       cors: {
-        origin: "*", 
-        methods: ["GET", "POST"]
+        origin: "*",
+        methods: ["GET", "POST"],
       },
     });
-
-    (res.socket as any).server.io = io;
 
     io.on('connection', (socket) => {
       console.log(`Client connected: ${socket.id}`);
@@ -49,6 +40,23 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     });
   }
+};
 
-  res.end();
+export async function POST(req: Request) {
+  console.log("Requisição recebida");
+
+  const { socket } = req as any;
+
+  if (socket) {
+    const server = socket.server;
+    initSocket(server);
+  }
+
+  return NextResponse.json({ message: 'Socket initialized' });
 }
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
