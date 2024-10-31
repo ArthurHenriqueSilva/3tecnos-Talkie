@@ -35,8 +35,7 @@ export default function RootLayout({
             <main className="my-auto flex items-center justify-center">
               {children}
             </main>
-
-            <Footer />
+            
           </SocketProvider>
         </UserProvider>
       </body>
