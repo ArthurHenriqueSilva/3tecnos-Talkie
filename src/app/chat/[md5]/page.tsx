@@ -7,7 +7,7 @@ import { Response_md5 } from "@/app/interface/Md5";
 import { api_md5 } from "@/app/proxy/proxy";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
-
+import { audioContext } from "@/app/context/Socket";
 type Params = Promise<{ md5: string }>;
 
 export default function ChatPage({params}: {params: Params}) {
@@ -19,7 +19,7 @@ export default function ChatPage({params}: {params: Params}) {
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
     const [isMicActive, setIsMicActive] = useState(false);
-    const { connectSocket, disconnectSocket, socket, isTalking, lastUser } = useSocket();
+    const { connectSocket, disconnectSocket, audioContext, handleAudioContext, isTalking, lastUser } = useSocket();
     const { idUser } = useUser();
     const router = useRouter();
 
@@ -45,8 +45,11 @@ export default function ChatPage({params}: {params: Params}) {
 
     const handleStart = () => {
         setStart(!start);
+        if (!audioContext){
+            handleAudioContext();
+        }
     }
-
+    
     useEffect(() => {
         if (md5Value) {
             getChannelMd5();
