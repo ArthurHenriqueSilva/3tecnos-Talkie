@@ -59,8 +59,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       newSocket.emit("joinChannel", { channelId: channelName });
 
       newSocket.on("audioData", (data: { audio: ArrayBuffer; username: string }) => {
-        console.log("Audio (chunk) recebido no Canal");
-        playAudio(data.audio);
+        if (data.username !== user?.name) {
+          console.log("Audio (chunk) recebido no Canal");
+          playAudio(data.audio);
+        }
       });
 
       newSocket.on("userTalking", (data: { channelId: string; username: string; state: boolean }) => {
