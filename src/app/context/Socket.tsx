@@ -94,6 +94,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const handleAudioContext = () => {
     if (!audioContext) {
       setAudioContext(new AudioContext());
+      console.log('Audio Context criado');
     }
   }
 
