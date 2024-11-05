@@ -13,33 +13,32 @@ app.prepare().then(() => {
   const httpServer = createServer(handler);
   
   const io = new Server(httpServer, {
-    path: "/socket", // Defina o caminho para o Socket.IO
+    path: "/socket",
     cors: {
-      origin: "*", // Permita todas as origens (ajuste conforme necessário)
+      origin: "*",
       methods: ["GET", "POST"],
     },
   });
 
   io.on("connection", (socket) => {
-    console.log(`Client connected: ${socket.id}`);
+    console.log(`Client conectado: ${socket.id}`);
 
     socket.on("disconnect", () => {
-      console.log(`Client disconnected: ${socket.id}`);
+      console.log(`Client desconectado: ${socket.id}`);
     });
 
-    // Aqui você pode adicionar outros eventos de socket
     socket.on("joinChannel", ({ channelId }) => {
       socket.join(channelId);
-      console.log(`Client ${socket.id} joined Channel ${channelId}`);
+      console.log(`Client ${socket.id} ouvindo Canal ${channelId}`);
     });
 
     socket.on("leaveChannel", ({ channelId }) => {
       socket.leave(channelId);
-      console.log(`Client ${socket.id} left Channel ${channelId}`);
+      console.log(`Client ${socket.id} deixou de ouvir o Canal ${channelId}`);
     });
 
     socket.on("audioData", ({ channelId, audio, username }) => {
-      console.log(`Received audio from ${socket.id} for channel ${channelId}`);
+      console.log(`Audio Recebido do Client ${socket.id} para o Canal ${channelId}`);
       socket.to(channelId).emit("audioData", { audio, username });
     });
 

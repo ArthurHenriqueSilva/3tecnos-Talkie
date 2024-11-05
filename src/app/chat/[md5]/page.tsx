@@ -7,10 +7,9 @@ import { Response_md5 } from "@/app/interface/Md5";
 import { api_md5 } from "@/app/proxy/proxy";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
-import { audioContext } from "@/app/context/Socket";
 type Params = Promise<{ md5: string }>;
 
-export default function ChatPage({params}: {params: Params}) {
+export default function ChatPage({ params }: { params: Params }) {
     const resolvedParams = use(params);
     const md5Value = resolvedParams.md5;
 
@@ -19,7 +18,7 @@ export default function ChatPage({params}: {params: Params}) {
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
     const [isMicActive, setIsMicActive] = useState(false);
-    const { connectSocket, disconnectSocket, audioContext, handleAudioContext, isTalking, lastUser } = useSocket();
+    const { connectSocket, disconnectSocket, handleAudioContext, audioContext, isTalking, lastUser } = useSocket();
     const { idUser } = useUser();
     const router = useRouter();
 
@@ -36,20 +35,25 @@ export default function ChatPage({params}: {params: Params}) {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     const handleDisconnect = () => {
         disconnectSocket();
         router.push("/");
-    }
+    };
 
     const handleStart = () => {
         setStart(!start);
-        if (!audioContext){
-            handleAudioContext();
+        handleAudioContext();
+    };
+
+    useEffect(() => {
+        if (audioContext) {
+            setIsLoading(false);
+            console.log("Audio Context pronto:", audioContext);
         }
-    }
-    
+    }, [audioContext]);
+
     useEffect(() => {
         if (md5Value) {
             getChannelMd5();
@@ -81,8 +85,8 @@ export default function ChatPage({params}: {params: Params}) {
                                 (
                                     <div>
                                         <i className="fa-solid fa-spinner fa-spin-pulse mx-auto w-fit text-center text-6xl"></i>
+                                        <p>Carregando contexto de áudio...</p>
                                     </div>
-
                                 )
                                 :
                                 (

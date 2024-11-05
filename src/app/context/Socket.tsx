@@ -1,10 +1,8 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { useUser } from "./User";
-
-export let audioContext: AudioContext | null = null;
 
 interface SocketProps {
   socket: Socket | null;
@@ -37,6 +35,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [lastUser, setLastUser] = useState<string | null>(null);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
+  const audioContextRef = useRef<AudioContext | null>(null);
+  audioContextRef.current = audioContext;
+
   const { user } = useUser();
 
   const connectSocket = (channelName: string) => {
@@ -45,10 +46,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       reconnectionAttempts: 3,
       reconnectionDelay: 1000,
       transports: ["websocket"]
-    });
-    
-    newSocket.on("connect_error", (error) => {
-      console.error("Erro ao conectar ao socket:", error.message);
     });
 
     newSocket.on("connect", () => {
@@ -61,7 +58,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       newSocket.on("audioData", (data: { audio: ArrayBuffer; username: string }) => {
         if (data.username !== user?.name) {
           console.log("Audio (chunk) recebido no Canal");
-          playAudio(data.audio);
+          const context = audioContextRef.current;
+          if (context) {
+            playAudio(data.audio, context);
+          } else {
+            console.warn("AudioContext ainda não disponível.");
+          }
         }
       });
 
@@ -95,20 +97,20 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleAudioContext = () => {
     if (!audioContext) {
-      setAudioContext(new AudioContext());
-      console.log('Audio Context criado');
+      const newAudioContext = new AudioContext();
+      setAudioContext(newAudioContext);
+      console.log("Audio Context criado");
     }
-  }
+  };
 
-  const playAudio = (audioData: ArrayBuffer) => {
-    if (audioContext){
-      audioContext.decodeAudioData(audioData, (buffer) => {
-        const source = audioContext.createBufferSource();
-        source.buffer = buffer;
-        source.connect(audioContext.destination);
-        source.start();
-      });
-    }
+  const playAudio = (audioData: ArrayBuffer, context: AudioContext) => {
+    context.decodeAudioData(audioData, (buffer) => {
+      const source = context.createBufferSource();
+      source.buffer = buffer;
+      source.connect(context.destination);
+      source.start();
+      // console.log('Reproduzindo áudio...');
+    });
   };
 
   const StartTalking = () => {
