@@ -67,7 +67,7 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
 
   const playBip = () => {
     return new Promise((resolve) => {
-      const audio = new Audio('sounds/bip.mp3');
+      const audio = new Audio('/sounds/bip.mp3');
       audio.onended = resolve;
       audio.play();
     });
