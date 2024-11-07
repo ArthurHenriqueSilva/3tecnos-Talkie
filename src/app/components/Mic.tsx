@@ -123,7 +123,7 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
       className={`rounded-full mx-auto ${isMicActive ? "btn-active" : "btn-deactive"}`}
       aria-label="Ativar/Desativar Microfone"
     >
-      <i className={`fas ${isMicActive ? "fa-microphone animate-pulse" : "fa-microphone-slash"}`}></i>
+      <i className={`fas fa-microphone ${isMicActive ? "animate-pulse" : ""}`}></i>
     </button>
   );
 }

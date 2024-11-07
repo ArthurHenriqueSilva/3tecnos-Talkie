@@ -98,11 +98,11 @@ export default function ChatPage({ params }: { params: Params }) {
                                     )
                                     :
                                     (
-                                        <div className="relative mx-auto flex w-60 flex-col gap-6 rounded border bg-white p-4 shadow-2xl">
+                                        <div className="relative mx-auto flex w-72 flex-col gap-6 rounded border bg-white p-4 shadow-2xl">
                                             <h1 className="mb-4 rounded border border-gray-200 bg-gray-200 p-2 text-center text-2xl">
                                                 {md5?.Value.NmEmpresa}
                                             </h1>
-                                            <p className="text-center text-sm">{md5?.Value.NmUsuario}</p>
+                                            <p className="text-center text-lg text-gray-600">{md5?.Value.NmUsuario}</p>
                                             <Mic
                                                 isMicActive={isMicActive}
                                                 setIsMicActive={setIsMicActive}

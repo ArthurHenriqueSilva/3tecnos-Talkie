@@ -24,10 +24,10 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  width: 80px;
-  height: 80px;
+  width: 5rem;
+  height: 5rem;
   color: #fff;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .btn-deactive {
@@ -37,5 +37,6 @@ body {
 .btn-active {
   background-color: #f00;
   transform: scale(1.1);
+  border: 0.2rem solid #dcdcdc;
   transition: background-color 0.3s, transform 0.3s;
 }
