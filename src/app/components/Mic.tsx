@@ -1,6 +1,6 @@
 "use client";
-import { useCallback, useEffect, useRef } from "react";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSocket } from "../context/Socket";
 
 type MicProps = {
@@ -10,6 +10,7 @@ type MicProps = {
 
 export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
   const { sendAudio, StartTalking, StopTalking } = useSocket();
+  const [start, setStart] = useState<boolean>(false);
   
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
@@ -64,21 +65,34 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
     }
   }, []);
 
-  useEffect(() => {
-    if (isMicActive) {
-      StartTalking();
-      startContinuousRecording();
-    } else {
-      StopTalking();
-      stopContinuousRecording();
-    }
+  function playBip() {
+    const audio = new Audio('/sounds/bip.mp3');
+    audio.play();
+    console.log('Bip');
+  };
 
+  const handleMicClick = () => setIsMicActive(!isMicActive);
+
+  useEffect(() => {
+    if (!start) {
+      setStart(true)
+    }
+    else {
+      if (isMicActive) {
+        StartTalking();
+        startContinuousRecording();
+        playBip();
+      } else {
+        StopTalking();
+        stopContinuousRecording();
+        playBip();
+      }
+  
+    }
     return () => {
       stopContinuousRecording();
     };
-  }, [isMicActive, startContinuousRecording, stopContinuousRecording]);
-
-  const handleMicClick = () => setIsMicActive(!isMicActive);
+  }, [isMicActive]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -104,14 +118,12 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
 
   return (
     <button
+      id="micBtn"
       onClick={handleMicClick}
-      className="text-5xl"
+      className={`rounded-full mx-auto ${isMicActive ? "btn-active" : "btn-deactive"}`}
+      aria-label="Ativar/Desativar Microfone"
     >
-      {isMicActive ? (
-        <i className="fa-solid fa-microphone animate-pulse text-green-500"></i>
-      ) : (
-        <i className="fa-solid fa-microphone-slash"></i>
-      )}
+      <i className={`fas ${isMicActive ? "fa-microphone animate-pulse" : "fa-microphone-slash"}`}></i>
     </button>
   );
 }

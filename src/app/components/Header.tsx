@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import logo from "@/app/public/3tecnos_logo.png";
+import logo from '../../../public/images/3tecnos_logo.png'
 
 export default function Header() {
   return (

@@ -18,3 +18,24 @@ body {
     text-wrap: balance;
   }
 }
+
+#micBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  width: 80px;
+  height: 80px;
+  color: #fff;
+  font-size: 2rem;
+}
+
+.btn-deactive {
+  background-color: #017bf3;
+}
+
+.btn-active {
+  background-color: #f00;
+  transform: scale(1.1);
+  transition: background-color 0.3s, transform 0.3s;
+}

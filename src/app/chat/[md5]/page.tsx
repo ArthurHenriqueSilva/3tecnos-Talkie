@@ -103,7 +103,6 @@ export default function ChatPage({ params }: { params: Params }) {
                                                 {md5?.Value.NmEmpresa}
                                             </h1>
                                             <p className="text-center text-sm">{md5?.Value.NmUsuario}</p>
-
                                             <Mic
                                                 isMicActive={isMicActive}
                                                 setIsMicActive={setIsMicActive}
