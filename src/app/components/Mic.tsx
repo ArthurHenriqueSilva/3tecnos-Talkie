@@ -65,30 +65,34 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
     }
   }, []);
 
-  function playBip() {
-    const audio = new Audio('/sounds/bip.mp3');
-    audio.play();
-    console.log('Bip');
+  const playBip = () => {
+    return new Promise((resolve) => {
+      const audio = new Audio('/path/to/bip/sound.mp3');
+      audio.onended = resolve;
+      audio.play();
+    });
   };
-
   const handleMicClick = () => setIsMicActive(!isMicActive);
 
   useEffect(() => {
-    if (!start) {
-      setStart(true)
-    }
-    else {
-      if (isMicActive) {
-        playBip();
-        StartTalking();
-        startContinuousRecording();
+    const handleRecording = async () => {
+      if (!start) {
+        setStart(true);
       } else {
-        StopTalking();
-        stopContinuousRecording();
-        playBip();
+        if (isMicActive) {
+          await playBip();
+          StartTalking();
+          startContinuousRecording();
+        } else {
+          StopTalking();
+          stopContinuousRecording();
+          await playBip();
+        }
       }
+    };
   
-    }
+    handleRecording();
+  
     return () => {
       stopContinuousRecording();
     };
