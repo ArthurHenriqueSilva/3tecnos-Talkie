@@ -79,9 +79,9 @@ export default function Mic({ isMicActive, setIsMicActive }: MicProps) {
     }
     else {
       if (isMicActive) {
+        playBip();
         StartTalking();
         startContinuousRecording();
-        playBip();
       } else {
         StopTalking();
         stopContinuousRecording();
